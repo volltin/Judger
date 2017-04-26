@@ -13,12 +13,17 @@ int python_seccomp_rules(struct config *_config) {
                                 SCMP_SYS(close), SCMP_SYS(readlink),
                                 SCMP_SYS(uname),
 								// add for python
+								SCMP_SYS(rt_sigprocmask),
 								SCMP_SYS(rt_sigaction),
+								SCMP_SYS(rt_sigreturn),
+								SCMP_SYS(rt_sigpending),
+								SCMP_SYS(sigaltstack),
 								SCMP_SYS(stat),
 								SCMP_SYS(lstat),
+								SCMP_SYS(exit),
+								SCMP_SYS(exit_group),
 								SCMP_SYS(mprotect),
 								SCMP_SYS(futex),
-								SCMP_SYS(rt_sigprocmask),
 								SCMP_SYS(getrlimit),
 								SCMP_SYS(set_tid_address),
 								SCMP_SYS(set_robust_list),
@@ -29,6 +34,25 @@ int python_seccomp_rules(struct config *_config) {
 								SCMP_SYS(geteuid),
 								SCMP_SYS(getegid),
 								SCMP_SYS(openat),
+								SCMP_SYS(getdents),
+								SCMP_SYS(getdents64),
+								SCMP_SYS(readv),
+								SCMP_SYS(writev),
+								SCMP_SYS(unlinkat),
+								SCMP_SYS(readlinkat),
+								SCMP_SYS(dup),
+								SCMP_SYS(dup2),
+								SCMP_SYS(dup3),
+								SCMP_SYS(mremap),
+								SCMP_SYS(msync),
+								SCMP_SYS(mincore),
+								SCMP_SYS(madvise),
+								
+								
+								// ioctl
+								SCMP_SYS(ioctl),
+								SCMP_SYS(fcntl),
+								
 								};
     int syscalls_whitelist_length = sizeof(syscalls_whitelist) / sizeof(int);
     scmp_filter_ctx ctx = NULL;
@@ -41,11 +65,6 @@ int python_seccomp_rules(struct config *_config) {
         if (seccomp_rule_add(ctx, SCMP_ACT_ALLOW, syscalls_whitelist[i], 0) != 0) {
             return LOAD_SECCOMP_FAILED;
         }
-    }
-	
-	// add special SCMP_SYS(ioctl)
-	if (seccomp_rule_add(ctx, SCMP_ACT_ALLOW, SCMP_SYS(ioctl), 0) != 0) {
-            return LOAD_SECCOMP_FAILED;
     }
 	
     // add extra rule for execve
