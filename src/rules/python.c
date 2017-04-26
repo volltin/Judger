@@ -49,7 +49,7 @@ int python_seccomp_rules(struct config *_config) {
 								// ioctl
 								SCMP_SYS(ioctl),
 								SCMP_SYS(fcntl),
-								
+								SCMP_SYS(execve)
 								};
     int syscalls_whitelist_length = sizeof(syscalls_whitelist) / sizeof(int);
     scmp_filter_ctx ctx = NULL;
