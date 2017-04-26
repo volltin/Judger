@@ -142,6 +142,11 @@ int child_process(FILE *log_fp, struct config *_config) {
                 CHILD_ERROR_EXIT(LOAD_SECCOMP_FAILED);
             }
         }
+		else if (strcmp("python", _config->seccomp_rule_name) == 0) {
+            if (python_seccomp_rules(_config) != SUCCESS ) {
+                CHILD_ERROR_EXIT(LOAD_SECCOMP_FAILED);
+            }
+        }
         // other rules
         else {
             // rule does not exist
