@@ -13,6 +13,7 @@ int python_seccomp_rules(struct config *_config) {
                                 SCMP_SYS(close), SCMP_SYS(readlink),
                                 SCMP_SYS(uname),
 								// add for python
+								SCMP_SYS(lseek),
 								SCMP_SYS(rt_sigprocmask),
 								SCMP_SYS(rt_sigaction),
 								SCMP_SYS(rt_sigreturn),
@@ -21,14 +22,11 @@ int python_seccomp_rules(struct config *_config) {
 								SCMP_SYS(stat),
 								SCMP_SYS(lstat),
 								SCMP_SYS(exit),
-								SCMP_SYS(exit_group),
-								SCMP_SYS(mprotect),
 								SCMP_SYS(futex),
 								SCMP_SYS(getrlimit),
 								SCMP_SYS(set_tid_address),
 								SCMP_SYS(set_robust_list),
 								SCMP_SYS(getcwd),
-								SCMP_SYS(getdents),
 								SCMP_SYS(getuid),
 								SCMP_SYS(getgid),
 								SCMP_SYS(geteuid),
@@ -75,9 +73,9 @@ int python_seccomp_rules(struct config *_config) {
     if (seccomp_rule_add(ctx, SCMP_ACT_ALLOW, SCMP_SYS(write), 1, SCMP_A0(SCMP_CMP_LE, 2)) != 0) {
        return LOAD_SECCOMP_FAILED;
     }
-    if (seccomp_rule_add(ctx, SCMP_ACT_ALLOW, SCMP_SYS(lseek), 1, SCMP_A0(SCMP_CMP_LE, 2)) != 0) {
-       return LOAD_SECCOMP_FAILED;
-    }
+    //if (seccomp_rule_add(ctx, SCMP_ACT_ALLOW, SCMP_SYS(lseek), 1, SCMP_A0(SCMP_CMP_LE, 2)) != 0) {
+    //   return LOAD_SECCOMP_FAILED;
+    //}
     if (seccomp_load(ctx) != 0) {
         return LOAD_SECCOMP_FAILED;
     }
