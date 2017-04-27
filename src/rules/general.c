@@ -1,12 +1,11 @@
 #include <stdio.h>
 #include <seccomp.h>
-
+#include <errno.h>
 #include "../runner.h"
 
 
 int general_seccomp_rules(struct config *_config) {
-    int syscalls_blacklist[] = {//SCMP_SYS(socket), 
-	                            SCMP_SYS(clone),
+    int syscalls_blacklist[] = {SCMP_SYS(socket), SCMP_SYS(clone),
                                 SCMP_SYS(fork), SCMP_SYS(vfork),
                                 SCMP_SYS(writev), SCMP_SYS(kill),
                                 SCMP_SYS(chdir), SCMP_SYS(fchdir),
@@ -24,7 +23,7 @@ int general_seccomp_rules(struct config *_config) {
         return LOAD_SECCOMP_FAILED;
     }
     for (int i = 0; i < syscalls_blacklist_length; i++) {
-        if (seccomp_rule_add(ctx, SCMP_ACT_KILL, syscalls_blacklist[i], 0) != 0) {
+        if (seccomp_rule_add(ctx, SCMP_ACT_ERRNO(EACCES), syscalls_blacklist[i], 0) != 0) {
             return LOAD_SECCOMP_FAILED;
         }
     }
