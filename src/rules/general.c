@@ -32,7 +32,7 @@ int general_seccomp_rules(struct config *_config) {
         return LOAD_SECCOMP_FAILED;
     }
     // only fd 0 1 2 are allowed
-    if (seccomp_rule_add(ctx, SCMP_ACT_KILL, SCMP_SYS(write), 1, SCMP_A0(SCMP_CMP_GT, 2)) != 0) {
+    if (seccomp_rule_add(ctx, SCMP_ACT_ERRNO(EACCES), SCMP_SYS(write), 1, SCMP_A0(SCMP_CMP_GT, 2)) != 0) {
         return LOAD_SECCOMP_FAILED;
     }
     if (seccomp_load(ctx) != 0) {
