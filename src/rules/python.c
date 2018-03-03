@@ -44,6 +44,7 @@ int python_seccomp_rules(struct config *_config) {
 								SCMP_SYS(msync),
 								SCMP_SYS(mincore),
 								SCMP_SYS(madvise),
+								SCMP_SYS(sched_getaffinity),
 								
 								
 								// ioctl
